@@ -4,6 +4,7 @@ import (
 	"io"
 	"net"
 	"strings"
+	"time"
 )
 
 // 判断一个error是否是io.EOF
@@ -82,4 +83,21 @@ func filterIP(addrs []net.Addr) string {
 	}
 
 	return ""
+}
+
+func ReadFull(conn net.Conn, b []byte, t int) (int, error) {
+	var total int
+	for {
+		if t != 0 {
+			conn.SetReadDeadline(time.Now().Add(time.Duration(t) * time.Second))
+		}
+		n, err := conn.Read(b[total:])
+		if err != nil {
+			return total, err
+		}
+		total += n
+		if total == len(b) {
+			return total, nil
+		}
+	}
 }
