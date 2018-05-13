@@ -22,7 +22,8 @@ func IsEOF(err error) bool {
 			return true
 		}
 	}
-	return true
+
+	return false
 }
 
 // 获取本机ip
